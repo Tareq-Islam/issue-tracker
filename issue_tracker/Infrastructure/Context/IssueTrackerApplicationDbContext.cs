@@ -11,6 +11,7 @@ public partial class IssueTrackerApplicationDbContext : DbContext
         : base(options)
     {
     }
+
     public virtual DbSet<AppFeature> AppFeatures { get; set; }
 
     public virtual DbSet<Right> Rights { get; set; }
