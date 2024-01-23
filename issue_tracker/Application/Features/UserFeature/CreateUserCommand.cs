@@ -1,6 +1,5 @@
 ﻿using Application.Abstractions.Services;
 using Domain.Entities;
-using System.Linq.Expressions;
 
 namespace Application.Features.UserFeature;
 
@@ -53,7 +52,7 @@ public class CreateUserCommand : IQuery<IApiResult>
                 UserMobileNumber = request.MobileNumber,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
-                RoleId = null                
+                RoleId = null
             };
 
             await _unitOfWork.User.AddAsync(user);
