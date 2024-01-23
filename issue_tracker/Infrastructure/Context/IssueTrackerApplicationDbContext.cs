@@ -12,78 +12,28 @@ public partial class IssueTrackerApplicationDbContext : DbContext
     {
     }
 
-    public virtual DbSet<AppFeature> AppFeatures { get; set; }
-
-    public virtual DbSet<Right> Rights { get; set; }
-
     public virtual DbSet<Role> Roles { get; set; }
-
-    public virtual DbSet<RoleRight> RoleRights { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<AppFeature>(entity =>
-        {
-            entity.Property(e => e.Id).ValueGeneratedNever();
-            entity.Property(e => e.Description)
-                .HasMaxLength(200)
-                .IsUnicode(false);
-            entity.Property(e => e.FeatureName)
-                .HasMaxLength(100)
-                .IsUnicode(false);
-            entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
-        });
-
-        modelBuilder.Entity<Right>(entity =>
-        {
-            entity.Property(e => e.Id).ValueGeneratedNever();
-            entity.Property(e => e.Description)
-                .HasMaxLength(200)
-                .IsUnicode(false);
-            entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
-            entity.Property(e => e.RightsName)
-                .HasMaxLength(100)
-                .IsUnicode(false);
-
-            entity.HasOne(d => d.AppFeature).WithMany(p => p.Rights)
-                .HasForeignKey(d => d.AppFeatureId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Rights_AppFeatures");
-        });
-
         modelBuilder.Entity<Role>(entity =>
         {
-            entity.Property(e => e.CreationTime)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime");
+            entity.Property(e => e.CreationTime).HasColumnType("datetime");
             entity.Property(e => e.DeletationTime).HasColumnType("datetime");
             entity.Property(e => e.Description)
                 .HasMaxLength(200)
                 .IsUnicode(false);
-            entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
             entity.Property(e => e.LastModificationTime).HasColumnType("datetime");
             entity.Property(e => e.RoleName)
                 .HasMaxLength(100)
                 .IsUnicode(false);
         });
 
-        modelBuilder.Entity<RoleRight>(entity =>
-        {
-            entity.Property(e => e.CreationTime)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime");
-            entity.Property(e => e.DeletationTime).HasColumnType("datetime");
-            entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
-            entity.Property(e => e.LastModificationTime).HasColumnType("datetime");
-        });
-
         modelBuilder.Entity<User>(entity =>
         {
-            entity.Property(e => e.CreationTime)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime");
+            entity.Property(e => e.CreationTime).HasColumnType("datetime");
             entity.Property(e => e.DeletationTime).HasColumnType("datetime");
             entity.Property(e => e.LastModificationTime).HasColumnType("datetime");
             entity.Property(e => e.LoginName)
