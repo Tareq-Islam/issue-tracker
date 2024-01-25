@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace Domain.Entities;
 
-public partial class RoleRight
+public partial class Role
 {
     public int Id { get; set; }
 
-    public int RoleId { get; set; }
+    public string RoleName { get; set; } = null!;
 
-    public int? RightsId { get; set; }
+    public string? Description { get; set; }
 
     public int IsActive { get; set; }
 
