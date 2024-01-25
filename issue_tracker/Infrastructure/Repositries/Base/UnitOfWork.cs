@@ -8,19 +8,13 @@ namespace Infrastructure.Repositries.Base
     public class UnitOfWork : IUnitOfWork
     {
         private readonly IssueTrackerApplicationDbContext _dbContext;
-        public IRepository<User, int> User { get; }
-        public IRepository<Right, int> Right { get; }
-        public IRepository<RoleRight, int> RoleRight { get; }
-        public IRepository<Role, int> Role { get; }
-        public IRepository<AppFeature, int> AppFeature { get; }
-        public UnitOfWork(IssueTrackerApplicationDbContext dbContext, IRepository<User, int> user, IRepository<Right, int> right, IRepository<RoleRight, int> roleRight, IRepository<Role, int> role, IRepository<AppFeature, int> appFeature)
+        public IRepository<User, int> User { get; }        
+        public IRepository<Role, int> Role { get; }                
+        public UnitOfWork(IssueTrackerApplicationDbContext dbContext, IRepository<User, int> user, IRepository<Role, int> role)
         {
             _dbContext = dbContext;
             User = user;
-            Right = right;
-            RoleRight = roleRight;
-            Role = role;
-            AppFeature = appFeature;
+            Role = role;            
         }
 
         private bool disposed;
