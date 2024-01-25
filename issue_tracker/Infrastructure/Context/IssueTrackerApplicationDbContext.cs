@@ -20,12 +20,12 @@ public partial class IssueTrackerApplicationDbContext : DbContext
     {
         modelBuilder.Entity<Role>(entity =>
         {
-            entity.Property(e => e.CreationTime).HasColumnType("datetime");
-            entity.Property(e => e.DeletationTime).HasColumnType("datetime");
+            entity.HasKey(e => e.Id).HasName("PK_Roles_1");
+
+            entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Description)
                 .HasMaxLength(200)
                 .IsUnicode(false);
-            entity.Property(e => e.LastModificationTime).HasColumnType("datetime");
             entity.Property(e => e.RoleName)
                 .HasMaxLength(100)
                 .IsUnicode(false);
