@@ -24,6 +24,17 @@ namespace API.Services
                 return 0;
             }
         }
-        //public int RoleId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        
+        public int RoleId {
+            get
+            {
+                if (_claim.Any(x => x.Type == "rid"))
+                {
+                    int id = Convert.ToInt32(_claim.First(x => x.Type == "rid").Value);
+                    return id > 0 ? id : 0;
+                }
+                return 0;
+            }
+        }
     }
 }

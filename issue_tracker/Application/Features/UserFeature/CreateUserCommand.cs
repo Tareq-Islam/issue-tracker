@@ -52,7 +52,7 @@ public class CreateUserCommand : IQuery<IApiResult>
                 UserMobileNumber = request.MobileNumber,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
-                RoleId = null
+                RoleId = request.RoleId
             };
 
             await _unitOfWork.User.AddAsync(user);
