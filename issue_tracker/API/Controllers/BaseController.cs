@@ -4,8 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace API.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
-    //[Authorize]
+    [ApiController]    
     public class BaseController : ControllerBase
     {
         private IMediator _mediatorInstance;

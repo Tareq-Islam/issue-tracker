@@ -1,5 +1,7 @@
-﻿using Application.Features.AuthFeature;
+﻿using API.Attributes;
+using Application.Features.AuthFeature;
 using Application.Features.RoleFeature;
+using Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -10,6 +12,7 @@ namespace API.Controllers
     [ApiController]
     public class RoleController : BaseController
     {
+        [JwtAuthorize(RoleEnum.Admin, RoleEnum.Super_Admin)]
         [HttpGet]
         public async Task<IActionResult> GetRoles()
         {
@@ -17,6 +20,7 @@ namespace API.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
+        [JwtAuthorize(RoleEnum.Super_Admin)]
         [HttpGet("sync")]
         public async Task<IActionResult> SyncRoles()
         {

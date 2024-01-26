@@ -42,7 +42,7 @@ public class UserLoginQuery : IQuery<IApiResult>
             var claims = new List<Claim>
             {
                 new Claim("uid", currentUser.Id.ToString()),
-                new Claim("rid", "0"),
+                new Claim("rid", currentUser.RoleId.ToString()),
                 new Claim("exp", tokenExpiredTime.ToString())
             };
 
@@ -50,7 +50,11 @@ public class UserLoginQuery : IQuery<IApiResult>
 
             var response = new
             {
-                Token = token
+                Token = token,
+                Payload = new
+                {
+                    RoleId = currentUser.RoleId
+                }
             };
 
             return ApiResult<dynamic>.Success(response);
