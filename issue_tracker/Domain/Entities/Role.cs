@@ -14,4 +14,6 @@ public partial class Role
     public int IsActive { get; set; }
 
     public int IsDeleted { get; set; }
+
+    public int? RoleType { get; set; }
 }
