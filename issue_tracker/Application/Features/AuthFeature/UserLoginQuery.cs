@@ -24,7 +24,7 @@ public class UserLoginQuery : IQuery<IApiResult>
                 .Where(x => x.LoginName.Trim().ToLower() == request.LoginName.ToLower().Trim())
                 .FirstOrDefaultAsync();
 
-            bool isInvalidUser = currentUser is null or { IsActive: 0 } or { IsDeleted: 1 };
+            bool isInvalidUser = currentUser is null;
             if (isInvalidUser)
             {
                 return ApiResult.Fail("Login Access Deny.");

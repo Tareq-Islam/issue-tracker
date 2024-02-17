@@ -86,7 +86,6 @@ public partial class IssueTrackerApplicationDbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PK_Roles_1");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Description)
                 .HasMaxLength(200)
                 .IsUnicode(false);
@@ -119,9 +118,6 @@ public partial class IssueTrackerApplicationDbContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.Property(e => e.CreationTime).HasColumnType("datetime");
-            entity.Property(e => e.DeletationTime).HasColumnType("datetime");
-            entity.Property(e => e.LastModificationTime).HasColumnType("datetime");
             entity.Property(e => e.LoginName)
                 .HasMaxLength(50)
                 .IsUnicode(false);
@@ -136,6 +132,14 @@ public partial class IssueTrackerApplicationDbContext : DbContext
             entity.Property(e => e.UserName)
                 .HasMaxLength(100)
                 .IsUnicode(false);
+
+            entity.HasOne(d => d.Role).WithMany(p => p.Users)
+                .HasForeignKey(d => d.RoleId)
+                .HasConstraintName("FK_Users_Roles");
+
+            entity.HasOne(d => d.Vendor).WithMany(p => p.Users)
+                .HasForeignKey(d => d.VendorId)
+                .HasConstraintName("FK_Users_Vendor");
         });
 
         modelBuilder.Entity<Vendor>(entity =>
@@ -144,7 +148,6 @@ public partial class IssueTrackerApplicationDbContext : DbContext
 
             entity.ToTable("Vendor");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Address)
                 .HasMaxLength(255)
                 .IsUnicode(false);
