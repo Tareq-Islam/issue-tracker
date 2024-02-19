@@ -13,5 +13,9 @@ public partial class Role
 
     public string? Description { get; set; }
 
+    public DateTime CreationTime { get; set; }
+
+    public int IsDeleted { get; set; }
+
     public virtual ICollection<User> Users { get; set; } = new List<User>();
 }

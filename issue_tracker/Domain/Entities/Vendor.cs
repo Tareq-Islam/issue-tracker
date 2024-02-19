@@ -15,5 +15,11 @@ public partial class Vendor
 
     public string? Address { get; set; }
 
+    public DateTime CreationTime { get; set; }
+
+    public int IsDeleted { get; set; }
+
+    public virtual ICollection<Issue> Issues { get; set; } = new List<Issue>();
+
     public virtual ICollection<User> Users { get; set; } = new List<User>();
 }
