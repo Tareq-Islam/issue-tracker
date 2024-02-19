@@ -16,7 +16,7 @@ public class GetRoleListQuery : IQuery<IApiResult>
 
         public async Task<IApiResult> Handle(GetRoleListQuery request, CancellationToken cancellationToken)
         {
-            var roles = await _unitOfWork.Role.Queryable
+            var roles = await _unitOfWork.Role.Queryable          
                 .Where(x => x.IsDeleted == 0 && x.IsActive == 1)
                 .Select(x => new
                 {
