@@ -1,4 +1,6 @@
-﻿using Application.Features.UserFeature;
+﻿using API.Attributes;
+using Application.Features.AuthFeature;
+using Application.Features.UserFeature;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,5 +21,7 @@ namespace API.Controllers
             var response = await _mediator.Send(dto);
             return StatusCode(response.StatusCode, response);
         }
+
+       
     }
 }

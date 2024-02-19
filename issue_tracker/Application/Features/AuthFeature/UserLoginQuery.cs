@@ -21,13 +21,22 @@ public class UserLoginQuery : IQuery<IApiResult>
         public async Task<IApiResult> Handle(UserLoginQuery request, CancellationToken cancellationToken)
         {
             var currentUser = await _unitOfWork.User.Queryable
-                .Where(x => x.LoginName.Trim().ToLower() == request.LoginName.ToLower().Trim())
+                .Where(x => x.LoginName.Trim().ToLower() == request.LoginName.ToLower().Trim()).Select(x => new
+                {                   
+                    x.UserName,
+                    x.RoleId,
+                    x.Id,
+                    x.Role.RoleName,
+                    x.PasswordHash,
+                    x.PasswordSalt,
+                    x.Role.RoleType
+                })
                 .FirstOrDefaultAsync();
 
             bool isInvalidUser = currentUser is null;
             if (isInvalidUser)
             {
-                return ApiResult.Fail("Login Access Deny.");
+                return ApiResult.Fail("Invalid Username or Password");
             }
 
             bool isPasswordValid = _jwtService.IsPasswordVerified(request.Password, currentUser.PasswordHash, currentUser.PasswordSalt);
@@ -50,10 +59,14 @@ public class UserLoginQuery : IQuery<IApiResult>
 
             var response = new
             {
-                Token = token,
+                Token = token,  
                 Payload = new
                 {
-                    RoleId = currentUser.RoleId
+                    rid = currentUser.RoleId,
+                    currentUser.UserName,
+                    uid = currentUser.Id,                    
+                    currentUser.RoleName,
+                    currentUser.RoleType
                 }
             };
 
