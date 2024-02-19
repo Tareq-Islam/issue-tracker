@@ -26,8 +26,6 @@ public partial class IssueTrackerApplicationDbContext : DbContext
 
     public virtual DbSet<IssueSolutionTagMapping> IssueSolutionTagMappings { get; set; }
 
-    public virtual DbSet<IssueTrack> IssueTracks { get; set; }
-
     public virtual DbSet<Role> Roles { get; set; }
 
     public virtual DbSet<Site> Sites { get; set; }
@@ -43,12 +41,27 @@ public partial class IssueTrackerApplicationDbContext : DbContext
         modelBuilder.Entity<Assignee>(entity =>
         {
             entity.ToTable("Assignee");
+
+            entity.Property(e => e.CreationTime)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+
+            entity.HasOne(d => d.Issue).WithMany(p => p.Assignees)
+                .HasForeignKey(d => d.IssueId)
+                .HasConstraintName("FK_Assignee_Issues");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Assignees)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK_Assignee_Users");
         });
 
         modelBuilder.Entity<Category>(entity =>
         {
             entity.ToTable("Category");
 
+            entity.Property(e => e.CreationTime)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
             entity.Property(e => e.Description)
                 .HasMaxLength(255)
                 .IsUnicode(false);
@@ -57,6 +70,9 @@ public partial class IssueTrackerApplicationDbContext : DbContext
 
         modelBuilder.Entity<CauseFinding>(entity =>
         {
+            entity.Property(e => e.CreationTime)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
             entity.Property(e => e.Description)
                 .HasMaxLength(255)
                 .IsUnicode(false);
@@ -71,35 +87,84 @@ public partial class IssueTrackerApplicationDbContext : DbContext
                 .HasMaxLength(1024)
                 .IsUnicode(false)
                 .HasColumnName("Comment");
-            entity.Property(e => e.LogTime).HasColumnType("datetime");
+            entity.Property(e => e.CreationTime)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
             entity.Property(e => e.Subject)
                 .HasMaxLength(255)
                 .IsUnicode(false);
+
+            entity.HasOne(d => d.Assignee).WithMany(p => p.Comments)
+                .HasForeignKey(d => d.AssigneeId)
+                .HasConstraintName("FK_Comments_Assignee");
+
+            entity.HasOne(d => d.Issue).WithMany(p => p.Comments)
+                .HasForeignKey(d => d.IssueId)
+                .HasConstraintName("FK_Comments_Issues");
+        });
+
+        modelBuilder.Entity<Issue>(entity =>
+        {
+            entity.Property(e => e.CreationTime)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+
+            entity.HasOne(d => d.Category).WithMany(p => p.Issues)
+                .HasForeignKey(d => d.CategoryId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Issues_Category");
+
+            entity.HasOne(d => d.Vendor).WithMany(p => p.Issues)
+                .HasForeignKey(d => d.VendorId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Issues_Vendor");
         });
 
         modelBuilder.Entity<IssueCauseFindingsMapping>(entity =>
         {
             entity.ToTable("IssueCauseFindingsMapping");
+
+            entity.Property(e => e.CreationTime)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+
+            entity.HasOne(d => d.CauseFinding).WithMany(p => p.IssueCauseFindingsMappings)
+                .HasForeignKey(d => d.CauseFindingId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_IssueCauseFindingsMapping_CauseFindings");
+
+            entity.HasOne(d => d.Issue).WithMany(p => p.IssueCauseFindingsMappings)
+                .HasForeignKey(d => d.IssueId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_IssueCauseFindingsMapping_Issues");
         });
 
         modelBuilder.Entity<IssueSolutionTagMapping>(entity =>
         {
             entity.ToTable("IssueSolutionTagMapping");
-        });
 
-        modelBuilder.Entity<IssueTrack>(entity =>
-        {
-            entity.ToTable("IssueTrack");
+            entity.Property(e => e.CreationTime)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
 
-            entity.Property(e => e.Remark)
-                .HasMaxLength(255)
-                .IsUnicode(false);
+            entity.HasOne(d => d.Issue).WithMany(p => p.IssueSolutionTagMappings)
+                .HasForeignKey(d => d.IssueId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_IssueSolutionTagMapping_Issues");
+
+            entity.HasOne(d => d.SolutionTag).WithMany(p => p.IssueSolutionTagMappings)
+                .HasForeignKey(d => d.SolutionTagId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_IssueSolutionTagMapping_SolutionTag");
         });
 
         modelBuilder.Entity<Role>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK_Roles_1");
 
+            entity.Property(e => e.CreationTime)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
             entity.Property(e => e.Description)
                 .HasMaxLength(200)
                 .IsUnicode(false);
@@ -110,6 +175,9 @@ public partial class IssueTrackerApplicationDbContext : DbContext
 
         modelBuilder.Entity<Site>(entity =>
         {
+            entity.Property(e => e.CreationTime)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
             entity.Property(e => e.Description)
                 .HasMaxLength(255)
                 .IsUnicode(false);
@@ -122,6 +190,9 @@ public partial class IssueTrackerApplicationDbContext : DbContext
         {
             entity.ToTable("SolutionTag");
 
+            entity.Property(e => e.CreationTime)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
             entity.Property(e => e.Description)
                 .HasMaxLength(255)
                 .IsUnicode(false);
@@ -132,6 +203,9 @@ public partial class IssueTrackerApplicationDbContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
+            entity.Property(e => e.CreationTime)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
             entity.Property(e => e.LoginName)
                 .HasMaxLength(50)
                 .IsUnicode(false);
@@ -168,6 +242,9 @@ public partial class IssueTrackerApplicationDbContext : DbContext
             entity.Property(e => e.Contact)
                 .HasMaxLength(255)
                 .IsUnicode(false);
+            entity.Property(e => e.CreationTime)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .IsUnicode(false);

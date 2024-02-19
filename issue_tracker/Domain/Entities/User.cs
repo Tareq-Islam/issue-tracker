@@ -23,6 +23,12 @@ public partial class User
 
     public int? VendorId { get; set; }
 
+    public DateTime CreationTime { get; set; }
+
+    public int IsDeleted { get; set; }
+
+    public virtual ICollection<Assignee> Assignees { get; set; } = new List<Assignee>();
+
     public virtual Role? Role { get; set; }
 
     public virtual Vendor? Vendor { get; set; }

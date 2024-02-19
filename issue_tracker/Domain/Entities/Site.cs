@@ -10,4 +10,8 @@ public partial class Site
     public string? SiteName { get; set; }
 
     public string? Description { get; set; }
+
+    public DateTime CreationTime { get; set; }
+
+    public int IsDeleted { get; set; }
 }
