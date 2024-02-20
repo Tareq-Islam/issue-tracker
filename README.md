@@ -6,7 +6,7 @@ dotnet ef dbcontext scaffold "Server=localhost; Database=IssueTrackerDB; Trusted
 
 
 --
-# Run following command in API folder (Code First)
+# Run following command in Infrastructure folder (Code First)
 --
 From Package Manager Console
 - add-migration init
