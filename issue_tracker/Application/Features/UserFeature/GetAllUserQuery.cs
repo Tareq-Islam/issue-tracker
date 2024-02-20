@@ -22,17 +22,7 @@ namespace Application.Features.UserFeature
 
                 var user = _unitOfWork.User.Queryable.AsQueryable();      
 
-                var data = await user
-                    .OrderBy(x => x.UserName)                
-                    .AsNoTracking()
-                    .Select(x => new 
-                    {
-                        Id = x.Id,
-                        Name = x.UserName,
-                        LoginName = x.LoginName,
-                        Email = x.UserEmail,
-                    })
-                    .ToListAsync();
+                var data = await user.ToListAsync();
 
                 return ApiResult<dynamic>.Success(data);
             }

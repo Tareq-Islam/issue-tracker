@@ -16,13 +16,7 @@ public class GetRoleListQuery : IQuery<IApiResult>
 
         public async Task<IApiResult> Handle(GetRoleListQuery request, CancellationToken cancellationToken)
         {
-            var roles = await _unitOfWork.Role.Queryable          
-                .Select(x => new
-                {
-                    x.Id,
-                    x.RoleName,
-                    x.Description
-                }).ToListAsync();
+            var roles = await _unitOfWork.Role.Queryable.ToListAsync();
 
             return ApiResult<dynamic>.Success(roles);
         }
