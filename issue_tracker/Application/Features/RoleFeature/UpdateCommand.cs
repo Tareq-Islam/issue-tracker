@@ -5,7 +5,7 @@ namespace Application.Features.RoleFeature
     public class UpdateCommand : ICommand<IApiResult>
     {
         public int Id { get; set; }
-        public string RoleName { get; set; }
+        public string Name { get; set; }
         public string Description { get; set; }     
 
         internal class UpdateCommandHandler : IRequestHandler<UpdateCommand, IApiResult>
@@ -24,7 +24,7 @@ namespace Application.Features.RoleFeature
                     return ApiResult.Fail("Role has not been found");
 
              
-                item.RoleName = request.RoleName;
+                item.RoleName = request.Name;
                 item.Description = request.Description;
                 _unitOfWork.Role.Update(item);
                 await _unitOfWork.SaveChangesAsync();

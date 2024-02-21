@@ -10,6 +10,6 @@ public enum RoleEnum
     Admin = 2,
     [Description("Vendor")]
     Vendor = 3,
-    [Description("Tenant")]
-    Tenant = 4
+    [Description("Operation")]
+    Operation = 4
 }
