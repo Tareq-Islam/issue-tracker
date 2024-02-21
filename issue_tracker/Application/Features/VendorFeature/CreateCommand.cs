@@ -4,8 +4,7 @@ using Domain.Entities;
 namespace Application.Features.VendorFeature;
 
 public class CreateCommand : IQuery<IApiResult>
-{ 
-    public int? Id { get; set; }
+{    
     public string Name { get; set; } = string.Empty;
     public string Address { get; set; } = string.Empty;
     public string Contact { get; set; } = string.Empty;
@@ -28,8 +27,7 @@ public class CreateCommand : IQuery<IApiResult>
                Name = request.Name,
                 Address = request.Address,
                 Contact = request.Contact,
-                Phone = request.Phone,
-               Id = (int)request.Id
+                Phone = request.Phone
             };
 
             await _unitOfWork.Vendor.AddAsync(role);
