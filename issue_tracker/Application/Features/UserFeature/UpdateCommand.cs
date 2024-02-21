@@ -14,8 +14,8 @@ namespace Application.Features.UserFeature
         public int UserId { get; set; }
         public string UserName { get; set; }
         public string UserEmail { get; set; }
-        public string MobileNumber { get; set; }          
-
+        public string MobileNumber { get; set; }
+        public int? VendorId { get; set; }
         internal class UpdateCommandHandler : IRequestHandler<UpdateCommand, IApiResult>
         {
             private readonly ICurrentUserService _currentUserService;
@@ -38,6 +38,8 @@ namespace Application.Features.UserFeature
                 // update user
                 user.UserName = request.UserName;
                 user.UserEmail = request.UserEmail;
+                user.VendorId = request.VendorId;
+                user.UserMobileNumber = request.MobileNumber;
                 _unitOfWork.User.Update(user);
                 await _unitOfWork.SaveChangesAsync();
 

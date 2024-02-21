@@ -9,7 +9,8 @@ public class CreateUserCommand : IQuery<IApiResult>
     public string UserEmail { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
     public string MobileNumber { get; set; } = string.Empty;
-    public int? RoleId { get; set; }
+    public int RoleId { get; set; }
+    public int? VendorId { get; set; }
     public string LoginName { get; set; } = string.Empty;
     internal class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, IApiResult>
     {
@@ -34,13 +35,7 @@ public class CreateUserCommand : IQuery<IApiResult>
 
                 throw;
             }
-
-            var isUserEmailExist = await _unitOfWork.User.IsExsitAsync(x => x.UserEmail.ToLower() == request.UserEmail.ToLower().Trim());
-            if (isUserEmailExist) return ApiResult.Fail("One user is already registered with this email.");
-
-            var isUserMobileExist = await _unitOfWork.User.IsExsitAsync(x => x.UserMobileNumber.Trim().ToLower() == request.MobileNumber.Trim().ToLower());
-            if (isUserMobileExist) return ApiResult.Fail("One user is already registered with this mobile number.");
-
+          
             // Generate Password Hash & Salt
             _jwtService.CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
@@ -50,6 +45,7 @@ public class CreateUserCommand : IQuery<IApiResult>
                 UserEmail = request.UserEmail.Trim(),
                 LoginName = request.LoginName.Trim(),
                 UserMobileNumber = request.MobileNumber,
+                VendorId = request.VendorId,               
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
                 RoleId = request.RoleId
