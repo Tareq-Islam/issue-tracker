@@ -18,7 +18,7 @@ namespace API.Controllers
         [HttpGet("status")]
         public async Task<IActionResult> GetStatus()
         {
-            var response = await _mediator.Send(new GetListQuery());
+            var response = await _mediator.Send(new GetIssueStatusCountQuery());
             return StatusCode(response.StatusCode, response);
         }
 
@@ -90,7 +90,7 @@ namespace API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var response = await _mediator.Send(new GetListQuery());
+            var response = await _mediator.Send(new DeleteCommand() { Id = id });
             return StatusCode(response.StatusCode, response);
         }
     }
