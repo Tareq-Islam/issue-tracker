@@ -20,20 +20,20 @@ namespace Application.Features.IssueFeature
             public async Task<IApiResult> Handle(GetListQuery request, CancellationToken cancellationToken)
             {
 
-                var user = _unitOfWork.User.Queryable.Where(x => x.IsDeleted == 0).Select(x => new {
+                var item = _unitOfWork.Issue.Queryable.Where(x => x.IsDeleted == 0).Select(x => new
+                {
                     x.Id,
-                    x.Role.RoleName,
-                    x.Role.RoleType,
-                    VendorName = x.Vendor.Name,
+                    CategoryName = x.Category.Name,
+                    x.CategoryId,
                     x.VendorId,
-                    x.UserName,
-                    x.RoleId,
-                    x.LoginName,
-                    x.UserEmail,
-                    x.UserMobileNumber,
+                    VendorName = x.Vendor.Name,
+                    x.SiteId,
+                    x.Site.SiteName,
+                    x.PriorityStatus,
+                    x.Status
                 }).AsQueryable();
 
-                var data = await user.ToListAsync();
+                var data = await item.ToListAsync();
 
                 return ApiResult<dynamic>.Success(data);
             }

@@ -32,4 +32,5 @@ public partial class Issue
     public virtual ICollection<IssueSolutionTagMapping> IssueSolutionTagMappings { get; set; } = new List<IssueSolutionTagMapping>();
 
     public virtual Vendor Vendor { get; set; } = null!;
+    public virtual Site Site { get; set; } = null!;
 }
