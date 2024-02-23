@@ -46,7 +46,7 @@ namespace Application.Features.IssueFeature
                         y.Assignee.User.UserName,
                         y.Subject,
                         y.AssigneeId,
-                        y.Comment1,
+                        y.CommentText,
                         y.CreationTime
                     }).ToList(),
                     causes = x.IssueCauseFindingsMappings.ToList(),
