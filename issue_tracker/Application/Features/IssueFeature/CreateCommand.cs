@@ -5,35 +5,70 @@ namespace Application.Features.IssueFeature;
 
 public class CreateCommand : IQuery<IApiResult>
 {    
-    public string Name { get; set; } = string.Empty;
-    public string Address { get; set; } = string.Empty;
-    public string Contact { get; set; } = string.Empty;
-    public string Phone { get; set; } = string.Empty;
+    public int CategoryId { get; set; }
+    public int SiteId { get; set; }
+    public int VendorId { get; set; }
+    public int Status { get; set; }
+    public int Priority { get; set; }
+    public string Subject { get; set; } = string.Empty;
+    public string Comment { get; set; } = string.Empty;
     internal class CreateCommandHandler : IRequestHandler<CreateCommand, IApiResult>
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IJwtService _jwtService;
-        public CreateCommandHandler(IUnitOfWork unitOfWork, IJwtService jwtService)
+        private readonly ICurrentUserService _currentUserService;
+        public CreateCommandHandler(IUnitOfWork unitOfWork,  ICurrentUserService currentUserService)
         {
             _unitOfWork = unitOfWork;
-            _jwtService = jwtService;
+            _currentUserService = currentUserService;
         }
 
         public async Task<IApiResult> Handle(CreateCommand request, CancellationToken cancellationToken)
-        {           
-
-            var role = new Vendor
+        {
+            using var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);
+            try
             {
-               Name = request.Name,
-                Address = request.Address,
-                Contact = request.Contact,
-                Phone = request.Phone
-            };
+                var vendor = _unitOfWork.Vendor.Queryable.Where(x => x.Id == request.VendorId).FirstOrDefault();
 
-            await _unitOfWork.Vendor.AddAsync(role);
-            await _unitOfWork.SaveChangesAsync();
+                var item = new Issue
+                {
+                    CategoryId = request.CategoryId,
+                    SiteId = request.SiteId,
+                    VendorId = request.VendorId,
+                    Status = request.Status,
+                    PriorityStatus = request.Priority,
+                };
 
-            return ApiResult.Success("Item created successfully.");
+                await _unitOfWork.Issue.AddAsync(item);
+                await _unitOfWork.SaveChangesAsync();
+
+                var comments = new Comment
+                {
+                    Comment1 = request.Comment,
+                    Subject = request.Subject,
+                };
+
+                var assignee = new Assignee
+                {
+                    UserId = _currentUserService.UserId,
+                    UserType = 1,
+                };
+
+                var assignee2 = new Assignee
+                {
+                    UserId = vendor.Users.FirstOrDefault().Id,
+                    UserType = 2,
+                };
+
+                await transaction.CommitAsync(cancellationToken);
+
+                return ApiResult.Success($"Issue is successfully created. Issue ID #{item.Id}");
+            }
+            catch (Exception)
+            {
+                await transaction.RollbackAsync(cancellationToken);
+                return ApiResult.Fail("Issue has not been created");
+            }
+           
         }
     }
 }

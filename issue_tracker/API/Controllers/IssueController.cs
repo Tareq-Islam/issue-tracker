@@ -22,19 +22,19 @@ namespace API.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        //[HttpGet("{id}/track")]
-        //public async Task<IActionResult> GetTrack(int id)
-        //{
-        //    var response = await _mediator.Send(new GetListQuery());
-        //    return StatusCode(response.StatusCode, response);
-        //}
+        [HttpGet("{id}/track")]
+        public async Task<IActionResult> GetTrack(int id)
+        {
+            var response = await _mediator.Send(new GetTrackQuery() { Id = id});
+            return StatusCode(response.StatusCode, response);
+        }
 
-        //[HttpPost]
-        //public async Task<IActionResult> Create([FromBody] CreateCommand dto)
-        //{
-        //    var response = await _mediator.Send(dto);
-        //    return StatusCode(response.StatusCode, response);
-        //}
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] CreateCommand dto)
+        {
+            var response = await _mediator.Send(dto);
+            return StatusCode(response.StatusCode, response);
+        }
 
         //[HttpPost("{id}/comment")]
         //public async Task<IActionResult> CreateComment([FromBody] CreateCommand dto)
