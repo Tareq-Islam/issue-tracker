@@ -83,10 +83,10 @@ public partial class IssueTrackerApplicationDbContext : DbContext
 
         modelBuilder.Entity<Comment>(entity =>
         {
-            entity.Property(e => e.Comment1)
+            entity.Property(e => e.CommentText)
                 .HasMaxLength(1024)
                 .IsUnicode(false)
-                .HasColumnName("Comment");
+                .HasColumnName("CommentText");
             entity.Property(e => e.CreationTime)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");

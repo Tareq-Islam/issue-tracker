@@ -13,7 +13,7 @@ public partial class Comment
 
     public string? Subject { get; set; }
 
-    public string? Comment1 { get; set; }
+    public string? CommentText { get; set; }
 
     public DateTime CreationTime { get; set; }
 
