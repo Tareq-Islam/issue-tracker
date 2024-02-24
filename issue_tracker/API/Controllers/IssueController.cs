@@ -9,9 +9,9 @@ namespace API.Controllers
     public class IssueController : BaseController
     {       
         [HttpGet]
-        public async Task<IActionResult> Gets()
+        public async Task<IActionResult> Gets([FromQuery] GetListQuery query)
         {
-            var response = await _mediator.Send(new GetListQuery());
+            var response = await _mediator.Send(query);
             return StatusCode(response.StatusCode, response);
         }
 

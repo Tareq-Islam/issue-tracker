@@ -1,12 +1,14 @@
 ﻿using Application.Abstractions.Services;
+using Application.Models.Request;
+using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
 
 namespace Application.Features.IssueFeature
 {
-    public class GetListQuery : IQuery<IApiResult>
+    public class GetListQuery : PaginatedSearchRequest<StatusEnum, int>, IQuery<IApiResult>
     {
-        internal class GetListQueryHandler : IRequestHandler<GetListQuery, IApiResult>
+        public class GetListQueryHandler : IRequestHandler<GetListQuery, IApiResult>
         {
             private readonly IUnitOfWork _unitOfWork;
             private readonly ICurrentUserService _currentUserService;
@@ -32,6 +34,20 @@ namespace Application.Features.IssueFeature
                     x.PriorityStatus,
                     x.Status
                 }).AsQueryable();
+
+                if (request.Status != StatusEnum.All)
+                {
+                    switch (request.Status)
+                    {
+                        case StatusEnum.Open:
+                            item = item.Where(x => x.Status == 0);
+                            break;
+                        case StatusEnum.Close:
+                            item = item.Where(x => x.Status == 1);
+                            break;                     
+                    }
+                }
+               
 
                 var data = await item.ToListAsync();
 

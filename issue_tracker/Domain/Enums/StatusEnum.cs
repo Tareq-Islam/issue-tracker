@@ -20,6 +20,13 @@ namespace Domain.Enums
         Close = 1
     }
 
+    public enum StatusEnum
+    {
+        All = 0,
+        Open = 1,
+        Close = 2
+    }
+
     public enum IssueAssigneUserType
     {
         IssueCreator = 0,

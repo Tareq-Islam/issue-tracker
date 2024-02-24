@@ -53,7 +53,7 @@ namespace Application.Features.IssueFeature
                     solutions = x.IssueSolutionTagMappings.ToList(),
                 }).AsQueryable();
 
-                var data = await item.FirstOrDefault<dynamic>();
+                var data = await item.ToListAsync();
 
                 return ApiResult<dynamic>.Success(data);
             }
