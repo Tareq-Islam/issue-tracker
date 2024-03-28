@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
+using System.Text;
 using Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure.Context;
 
@@ -171,6 +175,7 @@ public partial class IssueTrackerApplicationDbContext : DbContext
             entity.Property(e => e.RoleName)
                 .HasMaxLength(100)
                 .IsUnicode(false);
+          
         });
 
         modelBuilder.Entity<Site>(entity =>
@@ -228,6 +233,7 @@ public partial class IssueTrackerApplicationDbContext : DbContext
             entity.HasOne(d => d.Vendor).WithMany(p => p.Users)
                 .HasForeignKey(d => d.VendorId)
                 .HasConstraintName("FK_Users_Vendor");
+           
         });
 
         modelBuilder.Entity<Vendor>(entity =>
@@ -252,9 +258,53 @@ public partial class IssueTrackerApplicationDbContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false);
         });
-
+        modelBuilder.Entity<Role>()
+                  .HasData(RoleSeedData.AdministrativeRole);
+        modelBuilder.Entity<User>()
+                .HasData(UserSeedData.GetDefaultUser());
+        base.OnModelCreating(modelBuilder);
         OnModelCreatingPartial(modelBuilder);
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }
+
+
+public static class RoleSeedData
+{
+    public static readonly Role AdministrativeRole = new Role
+    {
+        Id = 1,
+        RoleName = "Administrative",
+        RoleType = 1,
+        CreationTime = DateTime.UtcNow // Use UTC time for consistency
+    };
+}
+
+public static class UserSeedData
+{  
+    public static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+    { 
+        using var hmac = new System.Security.Cryptography.HMACSHA512();
+        passwordSalt = hmac.Key;
+        passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+    }
+
+    public static User GetDefaultUser() // Returns a new User object with generated hash and salt
+    {
+        CreatePasswordHash("1234", out byte[] passwordHash, out byte[] passwordSalt);
+        return new User
+        {
+           Id= 1,
+            UserName = "Administrative",
+            LoginName = "admin",
+            UserEmail = "admin@mail.com",
+            UserMobileNumber = "01933450737",
+            RoleId = 1,
+            CreationTime = DateTime.UtcNow,
+            PasswordHash = passwordHash,
+            PasswordSalt = passwordSalt
+        };
+    }
+}
+
